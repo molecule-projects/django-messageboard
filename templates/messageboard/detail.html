@@ -1,0 +1,38 @@
+<!-- templates/messageboard/detail.html -->
+
+{% extends '_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/list.css' %}">
+<link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock styles %}
+
+{% block content %}
+<h3>Detail</h3>
+<div id="home" class="uk-grid-divider uk-flex-center" uk-grid>
+    <div class="article-filter uk-width-1-2@m">
+        <div class="post-it">
+            <p>{{ object.message }}</p>
+        </div>
+    </div>
+
+    <div class="article-filter uk-width-1-2@m">
+        <form action="{% url 'messageboard:comment' pk=object.id %}" method="post">
+            {% csrf_token %}
+            <p>{{ form.comment.label }}</p>
+            <div class="uk-flex">
+                {{ form.comment | add_class:"uk-input" }}
+                <button class="uk-button uk-button-primary uk-margin-left" type="submit">comment</button>
+            </div>
+        </form>
+
+        <ul class="uk-list">
+            {% for comment in comments %}
+                <div class="post-it-small">{{ comment.comment }}</div>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,51 @@
+<!-- templates/messageboard/list.html -->
+
+{% extends '_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/list.css' %}">
+{% endblock styles %}
+
+{% block content %}
+{% for field in form %}
+    {% if field.errors %}
+        <div class="uk-alert-danger" uk-alert>
+            <a class="uk-alert-close" uk-alert></a>
+            {{ field.errors }}
+        </div>
+    {% endif %}
+{% endfor %}
+
+<!-- This is a button toggling the modal -->
+<button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #modal-example">Add</button>
+<!-- This is the modal -->
+<div id="modal-example" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <form action="." method="post">
+            {% csrf_token %}
+            {{ form.message.label }}
+            {{ form.message | add_class:"uk-textarea" | attr:"placeholder:240 letters only" }}
+            {{ form.nickname.label }}
+            {{ form.nickname | add_class:"uk-input" | attr:"placeholder:displays to other users" }}
+            <div class="uk-flex uk-flex-between">
+                <button class="uk-button uk-button-danger uk-modal-close" type="button">Cancel</button>
+                <button class="uk-button main-theme" type="submit">Add Message</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="ul-list uk-margin-top uk-child-width-1-3@s uk-grid-match" uk-grid>
+    {% for message in object_list %}
+        <div>
+            <a class="uk-display-block uk-link-reset uk-padding-remove" href="{% url "messageboard:detail" pk=message.pk %}">
+                <div class="post-it">
+                    <p>{{ message.message }}</p>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock content %}
